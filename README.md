@@ -1,5 +1,7 @@
 # docker-git-pr-release
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/kitsuyui/docker-git-pr-release.svg)](https://hub.docker.com/r/kitsuyui/docker-git-pr-release/)
+
 Docker distribution of [git-pr-release](https://github.com/motemen/git-pr-release)
 
 ## Usage
@@ -10,7 +12,7 @@ $ docker run -it \
   -e GIT_PR_RELEASE_BRANCH_PRODUCTION=production \
   -e GIT_PR_RELEASE_BRANCH_STAGING=master \
   -v $(pwd):/repo \
-  -v $HOME/.ssh:/root/.ssh git-pr-release
+  -v $HOME/.ssh:/root/.ssh kitsuyui/docker-git-pr-release
 ```
 
 ## Update Gemfile.lock
