@@ -1,5 +1,6 @@
 # docker-git-pr-release
 
+![Coverage](https://raw.githubusercontent.com/kitsuyui/octocov-central/main/badges/kitsuyui/docker-git-pr-release/coverage.svg)
 [![Docker Pulls](https://img.shields.io/docker/pulls/kitsuyui/docker-git-pr-release.svg)](https://hub.docker.com/r/kitsuyui/docker-git-pr-release/)
 
 Docker distribution of [git-pr-release](https://github.com/motemen/git-pr-release)
