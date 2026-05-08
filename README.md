@@ -12,8 +12,20 @@ $ docker run -it \
   -e GIT_PR_RELEASE_BRANCH_PRODUCTION=production \
   -e GIT_PR_RELEASE_BRANCH_STAGING=master \
   -v $(pwd):/repo \
-  -v $HOME/.ssh:/root/.ssh kitsuyui/docker-git-pr-release
+  -v $HOME/.ssh:/root/.ssh:ro kitsuyui/docker-git-pr-release
 ```
+
+When you use SSH remotes, prepare `known_hosts` on the host before mounting
+the SSH directory. The image does not disable SSH host key checking by default.
+
+```console
+$ ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+```
+
+Verify scanned host keys before trusting them.
+
+If an environment needs a different trust policy, pass it explicitly with
+`GIT_SSH_COMMAND`.
 
 ## Update Gemfile.lock
 
