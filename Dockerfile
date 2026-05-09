@@ -7,8 +7,6 @@ RUN \
     cd /root && \
     bundle install && \
     apk del .build-deps && \
-    mkdir -p /repo && \
-    mkdir -p ~/.ssh && chmod 700 ~/.ssh && \
-    echo 'StrictHostKeyChecking no' >> ~/.ssh/config && chmod 600 ~/.ssh/config
+    mkdir -p /repo
 WORKDIR /repo
 ENTRYPOINT ["git-pr-release"]
