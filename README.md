@@ -7,13 +7,16 @@ Docker distribution of [git-pr-release](https://github.com/motemen/git-pr-releas
 ## Usage
 
 ```console
-$ docker run -it \
+$ docker run \
   -e GIT_PR_RELEASE_TOKEN='xxxxxxxxxxx' \
   -e GIT_PR_RELEASE_BRANCH_PRODUCTION=production \
   -e GIT_PR_RELEASE_BRANCH_STAGING=master \
   -v $(pwd):/repo \
   -v $HOME/.ssh:/root/.ssh:ro kitsuyui/docker-git-pr-release
 ```
+
+For interactive debugging sessions, add `-it` flags to the command above.
+CI/CD environments typically do not allocate a TTY, so `-t` is omitted here.
 
 When you use SSH remotes, prepare `known_hosts` on the host before mounting
 the SSH directory. The image does not disable SSH host key checking by default.
