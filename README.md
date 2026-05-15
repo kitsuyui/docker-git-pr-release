@@ -6,14 +6,30 @@ Docker distribution of [git-pr-release](https://github.com/motemen/git-pr-releas
 
 ## Usage
 
+Create a local env file for the variables passed to `git-pr-release`:
+
+```dotenv
+GIT_PR_RELEASE_TOKEN=xxxxxxxxxxx
+GIT_PR_RELEASE_BRANCH_PRODUCTION=production
+GIT_PR_RELEASE_BRANCH_STAGING=master
+```
+
+Keep this file untracked and restrict its permissions, for example with
+`chmod 600 .git-pr-release.env`.
+
 ```console
 $ docker run \
-  -e GIT_PR_RELEASE_TOKEN='xxxxxxxxxxx' \
-  -e GIT_PR_RELEASE_BRANCH_PRODUCTION=production \
-  -e GIT_PR_RELEASE_BRANCH_STAGING=master \
-  -v $(pwd):/repo \
-  -v $HOME/.ssh:/root/.ssh:ro kitsuyui/docker-git-pr-release
+  --env-file .git-pr-release.env \
+  -v "$(pwd):/repo" \
+  -v "$HOME/.ssh:/root/.ssh:ro" \
+  kitsuyui/docker-git-pr-release
 ```
+
+Avoid passing tokens inline with `-e GIT_PR_RELEASE_TOKEN=...`, because that
+can expose the token through shell history or process listings. Docker still
+stores container environment variables in metadata visible to Docker users; in
+CI/CD, prefer the platform's secret injection features instead of printing
+token values in job commands.
 
 For interactive debugging sessions, add `-it` flags to the command above.
 CI/CD environments typically do not allocate a TTY, so `-t` is omitted here.
