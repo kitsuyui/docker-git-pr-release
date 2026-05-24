@@ -34,6 +34,25 @@ token values in job commands.
 For interactive debugging sessions, add `-it` flags to the command above.
 CI/CD environments typically do not allocate a TTY, so `-t` is omitted here.
 
+### Configuration file precedence
+
+The upstream `git-pr-release` gem reads a `.git-pr-release` file from the
+working directory in addition to environment variables. Because the container
+mounts your repository at `/repo` (`-v "$(pwd):/repo"`), any `.git-pr-release`
+file present in your repository will be read at runtime.
+
+When both a `.git-pr-release` file and environment variables are present, the
+configuration file takes precedence over the environment variables for the keys
+it defines. This means that if your repository contains a `.git-pr-release`
+file with `BRANCH_PRODUCTION` or other settings, those values will override the
+corresponding environment variables you pass to the container.
+
+If you rely exclusively on environment variables for configuration, verify that
+your repository does not contain a `.git-pr-release` file. If the file exists
+for local use, you can prevent it from affecting the container by not mounting
+the directory that contains it, or by removing the file before running the
+container in CI/CD.
+
 When you use SSH remotes, prepare `known_hosts` on the host before mounting
 the SSH directory. The image does not disable SSH host key checking by default.
 
