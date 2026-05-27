@@ -65,6 +65,25 @@ Verify scanned host keys before trusting them.
 If an environment needs a different trust policy, pass it explicitly with
 `GIT_SSH_COMMAND`.
 
+## Concurrency
+
+`git-pr-release` checks for an existing release PR and creates one if none is
+found. This check-then-create sequence is not atomic: if two container runs
+overlap (e.g. two CI jobs triggered by rapid pushes to the staging branch),
+both may observe "no open PR" and each create a duplicate release PR.
+
+To prevent duplicate PRs, serialize runs at the CI level. With GitHub Actions,
+add a `concurrency` group to the workflow:
+
+```yaml
+concurrency:
+  group: git-pr-release-${{ github.ref }}
+  cancel-in-progress: false
+```
+
+Setting `cancel-in-progress: false` ensures that a queued run still executes
+after the current one finishes, so no release PR is skipped.
+
 ## Update Gemfile.lock
 
 ```console
