@@ -1,4 +1,4 @@
-FROM ruby:3.2.11-alpine
+FROM ruby:3.3.11-alpine
 ADD Gemfile /root
 ADD Gemfile.lock /root
 RUN \
