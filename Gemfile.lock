@@ -34,7 +34,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  git-pr-release
+  git-pr-release (~> 2)
 
 BUNDLED WITH
-   2.3.3
+   2.5.22
