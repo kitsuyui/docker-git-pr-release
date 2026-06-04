@@ -57,7 +57,7 @@ When you use SSH remotes, prepare `known_hosts` on the host before mounting
 the SSH directory. The image does not disable SSH host key checking by default.
 
 ```console
-$ ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+$ ssh-keyscan github.com >> "$HOME/.ssh/known_hosts"
 ```
 
 Verify scanned host keys before trusting them.
@@ -87,7 +87,7 @@ after the current one finishes, so no release PR is skipped.
 ## Update Gemfile.lock
 
 ```console
-$ docker run -v $(pwd):/root -it ruby sh -c 'cd /root; rm Gemfile; bundle lock'
+$ docker run -v "$(pwd):/root" -it ruby sh -c 'cd /root; rm Gemfile; bundle lock'
 ```
 
 ## LICENSE
