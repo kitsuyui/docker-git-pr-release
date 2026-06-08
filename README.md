@@ -14,6 +14,22 @@ GIT_PR_RELEASE_BRANCH_PRODUCTION=production
 GIT_PR_RELEASE_BRANCH_STAGING=master
 ```
 
+Common optional variables include:
+
+- `GIT_PR_RELEASE_TEMPLATE`: path to an ERB template file used for the
+  release pull request title and body.
+- `GIT_PR_RELEASE_LABELS`: comma-separated labels to add to the release pull
+  request.
+- `GIT_PR_RELEASE_MENTION`: name source listed next to each released pull
+  request, such as `author`.
+- `GIT_PR_RELEASE_SSL_NO_VERIFY`: set to `1` only when connecting to a GitHub
+  Enterprise server with a self-signed certificate.
+
+See the upstream
+[`git-pr-release` configuration reference](https://github.com/x-motemen/git-pr-release#configuration)
+for the authoritative option list. This image installs the version pinned in
+`Gemfile.lock`; update the lockfile before relying on newer upstream options.
+
 Keep this file untracked and restrict its permissions, for example with
 `chmod 600 .git-pr-release.env`.
 
@@ -57,7 +73,7 @@ When you use SSH remotes, prepare `known_hosts` on the host before mounting
 the SSH directory. The image does not disable SSH host key checking by default.
 
 ```console
-$ ssh-keyscan github.com >> "$HOME/.ssh/known_hosts"
+ssh-keyscan github.com >> "$HOME/.ssh/known_hosts"
 ```
 
 Verify scanned host keys before trusting them.
@@ -87,7 +103,7 @@ after the current one finishes, so no release PR is skipped.
 ## Update Gemfile.lock
 
 ```console
-$ docker run -v "$(pwd):/root" -it ruby sh -c 'cd /root; rm Gemfile; bundle lock'
+docker run -v "$(pwd):/root" -it ruby sh -c 'cd /root; rm Gemfile; bundle lock'
 ```
 
 ## LICENSE
