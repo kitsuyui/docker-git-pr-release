@@ -27,4 +27,8 @@ jobs:
 
       - name: Build
         run: |
-          docker build .
+          docker build --load -t docker-git-pr-release:ci .
+
+      - name: Test image runtime
+        run: |
+          docker run --rm --entrypoint sh docker-git-pr-release:ci -c "which git-pr-release && git --version"
