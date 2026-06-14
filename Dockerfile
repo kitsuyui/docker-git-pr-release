@@ -1,4 +1,4 @@
-FROM ruby:3.3.11-alpine
+FROM ruby:3.3.11-alpine@sha256:f00dbaf04ec980f2545fc4ecb39f01ba5b9c10c70ff322735b203ea1ed816dfb
 ADD Gemfile /root
 ADD Gemfile.lock /root
 RUN \
