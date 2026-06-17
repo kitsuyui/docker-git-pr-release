@@ -1,9 +1,13 @@
-FROM ruby:3.3.11-alpine@sha256:f00dbaf04ec980f2545fc4ecb39f01ba5b9c10c70ff322735b203ea1ed816dfb
+FROM ruby:3.3.11-alpine@sha256:dc01e7d51e7ec9b9d1b27b80dab38d313b338fce50489e9b0f128b861712b7ef
 ADD Gemfile /root
 ADD Gemfile.lock /root
 RUN \
     apk --update add --no-cache git=2.54.0-r0 openssh-client-default=10.3_p1-r0 && \
+<<<<<<< HEAD
     apk add --no-cache --virtual .build-deps build-base=0.5-r4 && \
+=======
+    apk add --no-cache --virtual .build-deps build-base=0.5-r4 && \
+>>>>>>> 9477af4 (Update base image digest and Alpine package pins to current versions)
     cd /root && \
     bundle config set --local frozen true && \
     bundle install && \
