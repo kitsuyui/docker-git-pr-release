@@ -4,6 +4,10 @@
 
 Docker distribution of [git-pr-release](https://github.com/motemen/git-pr-release)
 
+## Documentation
+
+- [Release process](docs/release.md)
+
 ## Usage
 
 Create a local env file for the variables passed to `git-pr-release`:
