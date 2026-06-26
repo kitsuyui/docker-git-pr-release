@@ -1,0 +1,41 @@
+#!/bin/sh
+set -eu
+
+fail() {
+    printf 'docker-git-pr-release: %s\n' "$1" >&2
+    exit 2
+}
+
+append_missing() {
+    if [ -n "$missing_env" ]; then
+        missing_env="$missing_env $1"
+    else
+        missing_env="$1"
+    fi
+}
+
+require_env() {
+    name="$1"
+    eval "value=\${$name:-}"
+    if [ -z "$value" ]; then
+        append_missing "$name"
+    fi
+}
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    fail 'the current /repo directory must be a git working tree; mount your repository at /repo'
+fi
+
+missing_env=
+require_env GIT_PR_RELEASE_TOKEN
+
+if [ ! -f .git-pr-release ]; then
+    require_env GIT_PR_RELEASE_BRANCH_PRODUCTION
+    require_env GIT_PR_RELEASE_BRANCH_STAGING
+fi
+
+if [ -n "$missing_env" ]; then
+    fail "missing required environment variables: $missing_env"
+fi
+
+exec git-pr-release "$@"

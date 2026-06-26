@@ -25,10 +25,20 @@ jobs:
           echo "Flags:     ${{ steps.buildx.outputs.flags }}"
           echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
 
+      - name: Test entrypoint wrapper
+        run: |
+          sh test/entrypoint.sh
+
       - name: Build
         run: |
           docker build --load -t docker-git-pr-release:ci .
 
       - name: Test image runtime
         run: |
-          docker run --rm --entrypoint sh docker-git-pr-release:ci -c "which git-pr-release && git --version"
+          docker run --rm --entrypoint sh docker-git-pr-release:ci -c "which git-pr-release && which git-pr-release-entrypoint && git --version"
+          set +e
+          output="$(docker run --rm docker-git-pr-release:ci 2>&1)"
+          status="$?"
+          set -e
+          test "$status" -eq 2
+          echo "$output" | grep "the current /repo directory must be a git working tree"
