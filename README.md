@@ -54,6 +54,20 @@ token values in job commands.
 For interactive debugging sessions, add `-it` flags to the command above.
 CI/CD environments typically do not allocate a TTY, so `-t` is omitted here.
 
+### Default behavior
+
+The container's `ENTRYPOINT` is `git-pr-release` with no default `CMD` arguments.
+Running the container without extra arguments invokes the tool directly, which
+creates or updates the release pull request. There is no built-in help screen: if a
+required environment variable such as `GIT_PR_RELEASE_TOKEN` is missing,
+`git-pr-release` exits with a non-zero status and writes an error to standard error.
+
+To open a shell inside the container for debugging, override the entrypoint:
+
+```console
+docker run --rm --entrypoint sh -it kitsuyui/docker-git-pr-release
+```
+
 ### Configuration file precedence
 
 The upstream `git-pr-release` gem reads a `.git-pr-release` file from the
