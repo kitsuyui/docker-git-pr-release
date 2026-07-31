@@ -68,15 +68,38 @@ assert_success() {
 plain_dir="$WORKDIR/plain"
 missing_env_repo="$WORKDIR/missing-env"
 config_repo="$WORKDIR/config"
+config_token_missing_repo="$WORKDIR/config-token-missing"
+partial_missing_repo="$WORKDIR/partial-missing"
 success_repo="$WORKDIR/success"
 
-mkdir -p "$plain_dir" "$missing_env_repo" "$config_repo" "$success_repo"
+mkdir -p "$plain_dir" "$missing_env_repo" "$config_repo" "$config_token_missing_repo" "$partial_missing_repo" "$success_repo"
 git -C "$missing_env_repo" init -q
 git -C "$config_repo" init -q
+git -C "$config_token_missing_repo" init -q
+git -C "$partial_missing_repo" init -q
 git -C "$success_repo" init -q
 
 assert_fail_contains "$plain_dir" 'the current /repo directory must be a git working tree'
 assert_fail_contains "$missing_env_repo" 'missing required environment variables: GIT_PR_RELEASE_TOKEN GIT_PR_RELEASE_BRANCH_PRODUCTION GIT_PR_RELEASE_BRANCH_STAGING'
+
+touch "$config_token_missing_repo/.git-pr-release"
+assert_fail_contains "$config_token_missing_repo" 'missing required environment variables: GIT_PR_RELEASE_TOKEN'
+
+set +e
+partial_output=$(cd "$partial_missing_repo" && env -i \
+    PATH="$PATH_WITH_STUB" \
+    GIT_PR_RELEASE_STUB_OUTPUT="$STUB_OUTPUT" \
+    GIT_PR_RELEASE_TOKEN=token \
+    GIT_PR_RELEASE_BRANCH_PRODUCTION=production \
+    "$ENTRYPOINT" 2>&1)
+partial_status=$?
+set -e
+
+if [ "$partial_status" -ne 2 ]; then
+    printf 'expected exit status 2, got %s\noutput:\n%s\n' "$partial_status" "$partial_output" >&2
+    exit 1
+fi
+assert_contains "$partial_output" 'missing required environment variables: GIT_PR_RELEASE_BRANCH_STAGING'
 
 touch "$config_repo/.git-pr-release"
 : >"$STUB_OUTPUT"
