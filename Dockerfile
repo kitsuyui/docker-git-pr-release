@@ -3,7 +3,7 @@ COPY Gemfile /root
 COPY Gemfile.lock /root
 COPY bin/git-pr-release-entrypoint /usr/local/bin/git-pr-release-entrypoint
 RUN \
-    apk --update add --no-cache git=2.54.0-r0 openssh-client-default=10.3_p1-r0 && \
+    apk --update add --no-cache git=2.54.0-r0 openssh-client-default=10.3_p1-r1 && \
     apk add --no-cache --virtual .build-deps build-base=0.5-r4 && \
     cd /root && \
     bundle config set --local frozen true && \
