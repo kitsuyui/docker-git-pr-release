@@ -2,9 +2,9 @@
 
 This repository distributes a Docker image for `git-pr-release`. Pull request
 CI verifies that the image builds and that the container can run
-`git-pr-release`, but this repository does not currently contain an automated
-Docker Hub publishing workflow. Treat the Git tag and GitHub Release as the
-source of truth for published image versions.
+`git-pr-release`. Pushing a stable version tag runs the `Publish Docker image`
+workflow, which publishes the matching version and `latest` to Docker Hub.
+A GitHub Release provides the release notes for the tag.
 
 ## Version policy
 
@@ -40,11 +40,11 @@ source of truth for published image versions.
    - the pinned `git-pr-release` gem version,
    - user-visible behavior changes,
    - any migration or breaking-change notes.
-6. Create a `vMAJOR.MINOR.PATCH` Git tag and GitHub Release.
-7. Publish the Docker image with the matching version tag. Update `latest`
-   only for stable releases.
-8. Verify that the Docker Hub page shows the expected tag and that the image
-   can be pulled by tag.
+6. Push a new `vMAJOR.MINOR.PATCH` Git tag for the verified commit. This
+   triggers `.github/workflows/publish.yml` and updates `latest`.
+7. Wait for the workflow to succeed, then verify that Docker Hub contains the
+   matching version and that the image can be pulled by tag.
+8. Create a GitHub Release with notes for the same tag.
 
 ## Artifact contract
 
@@ -58,12 +58,13 @@ The published image should:
 
 ## Pre-releases
 
-For experimental changes, publish a GitHub pre-release and a versioned image
-tag only. Do not move `latest` for pre-releases.
+The stable-tag workflow always updates `latest` and does not provide an
+automated pre-release image path. Do not use it for an experimental release.
+Prepare a versioned image manually without updating `latest` if needed.
 
 ## Failed publish handling
 
-If publishing fails after a GitHub Release exists, leave the release visible
-only if the matching Docker image tag is available. Otherwise, mark the release
-as a draft or delete it, fix the publish problem, and recreate the release with
-notes that match the actually published artifact.
+If publishing fails, investigate the workflow and credentials and rerun the
+failed job after the cause is fixed. Do not move or reuse the published tag.
+If a GitHub Release already exists, make the incomplete image publication
+clear in its notes until the matching image is available.
