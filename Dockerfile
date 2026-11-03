@@ -1,4 +1,4 @@
-FROM ruby:3.3.11-alpine@sha256:dc01e7d51e7ec9b9d1b27b80dab38d313b338fce50489e9b0f128b861712b7ef
+FROM ruby:4.0.0-alpine@sha256:409cde4da4e42d002f5fa2e267ada8ad47669c34bb66942b772ed912f9a17273
 COPY Gemfile /root
 COPY Gemfile.lock /root
 COPY bin/git-pr-release-entrypoint /usr/local/bin/git-pr-release-entrypoint
